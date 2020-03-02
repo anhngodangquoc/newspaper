@@ -12,6 +12,7 @@ import math
 from os import path
 
 from collections import Counter
+from newspaper.text import StopWordsVietNam
 
 from . import settings
 
@@ -106,15 +107,16 @@ def dbs(words, keywords):
     return (1 / (k * (k + 1.0)) * summ)
 
 
+# def split_words(text):
+#     """Split a string into array of words
+#     """
+#     try:
+#         text = re.sub(r'[^\w ]', '', text)  # strip special chars
+#         return [x.strip('.').lower() for x in text.split()]
+#     except TypeError:
+#         return None
 def split_words(text):
-    """Split a string into array of words
-    """
-    try:
-        text = re.sub(r'[^\w ]', '', text)  # strip special chars
-        return [x.strip('.').lower() for x in text.split()]
-    except TypeError:
-        return None
-
+    return StopWordsVietNam(language="vi").candidate_words(text)
 
 def keywords(text):
     """Get the top 10 keywords and their frequency scores ignores blacklisted
@@ -154,6 +156,7 @@ def split_sentences(text):
     """Split a large string into sentences
     """
     import nltk.data
+    print("sss")
     tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
     sentences = tokenizer.tokenize(text)

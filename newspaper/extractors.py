@@ -840,6 +840,7 @@ class ContentExtractor(object):
 
             if top_node is None:
                 top_node = e
+        print(top_node_score)
         return top_node
 
     def is_boostable(self, node):

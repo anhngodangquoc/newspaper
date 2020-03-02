@@ -207,3 +207,50 @@ class StopWordsThai(StopWords):
         import pythainlp
         tokens = pythainlp.word_tokenize(stripped_input)
         return tokens
+
+class StopWordsVietNam(StopWords):
+    """VN segmentation
+        """
+
+    def __init__(self, language='vn'):
+        super(StopWordsVietNam, self).__init__(language='vn')
+
+    def candidate_words(self, stripped_input):
+        import underthesea
+        tags = underthesea.pos_tag(stripped_input)
+
+        tokens = []
+        noun_phrase = ""
+        for i in range(0, len(tags)):
+            if tags[i][1] in ["N", "Np", "Nu", "Nc", "M", "NN", "NNP", "NNPS", "NNS"] and tags[i][0].strip() not in ["",
+                                                                                                                     " "]:
+                if noun_phrase != "":
+                    noun_phrase += " " + tags[i][0].strip()
+                else:
+                    noun_phrase = tags[i][0].strip()
+            else:
+                if noun_phrase not in ["", " "] and len(noun_phrase.strip().split()) >= 2:
+                    tokens.append(noun_phrase.strip())
+                noun_phrase = ""
+        if noun_phrase.strip() not in ["", " "] and len(noun_phrase.strip().split()) >= 2:
+            tokens.append(noun_phrase.strip())
+
+        return tokens
+
+    def get_stopword_count(self, content):
+        if not content:
+            return WordStats()
+        ws = WordStats()
+        candidate_words = self.candidate_words(content)
+        candidate_words = list(map(lambda x: x.lower(), candidate_words))
+        overlapping_stopwords = []
+        c = 0
+        for w in candidate_words:
+            c += 1
+            if w in self.STOP_WORDS:
+                overlapping_stopwords.append(w)
+
+        ws.set_word_count(c)
+        ws.set_stopword_count(len(overlapping_stopwords))
+        ws.set_stop_words(overlapping_stopwords)
+        return ws
