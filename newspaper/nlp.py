@@ -7,50 +7,53 @@ __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
 
-import re
 import math
+from collections import Counter
 from os import path
 
-from collections import Counter
 from newspaper.text import StopWordsVietNam
-
 from . import settings
 
 ideal = 20.0
 
 stopwords = set()
 
+
 def load_stopwords(language):
     """ 
     Loads language-specific stopwords for keyword selection
     """
     global stopwords
-    
+
     # stopwords for nlp in English are not the regular stopwords
     # to pass the tests
     # can be changed with the tests
     if language == 'en':
         stopwordsFile = settings.NLP_STOPWORDS_EN
     else:
-        stopwordsFile = path.join(settings.STOPWORDS_DIR,\
+        stopwordsFile = path.join(settings.STOPWORDS_DIR, \
                                   'stopwords-{}.txt'.format(language))
     with open(stopwordsFile, 'r', encoding='utf-8') as f:
         stopwords.update(set([w.strip() for w in f.readlines()]))
-        
-        
+
+
 def summarize(url='', title='', text='', max_sents=5):
     if not text or not title or max_sents <= 0:
         return []
 
     summaries = []
+    print(text)
     sentences = split_sentences(text)
+    # print(sentences)
     keys = keywords(text)
     titleWords = split_words(title)
 
     # Score sentences, and use the top 5 or max_sents sentences
     ranks = score(sentences, titleWords, keys).most_common(max_sents)
+    # print(ranks)
     for rank in ranks:
         summaries.append(rank[0])
+    print(summaries)
     summaries.sort(key=lambda summary: summary[0])
     return [summary[1] for summary in summaries]
 
@@ -59,8 +62,13 @@ def score(sentences, titleWords, keywords):
     """Score sentences based on different features
     """
     senSize = len(sentences)
+    word_already_seen = []
     ranks = Counter()
     for i, s in enumerate(sentences):
+        if s not in word_already_seen:
+            word_already_seen.append(s)
+        else:
+            continue
         sentence = split_words(s)
         titleFeature = title_score(titleWords, sentence)
         sentenceLength = length_score(len(sentence))
@@ -69,9 +77,10 @@ def score(sentences, titleWords, keywords):
         dbsFeature = dbs(sentence, keywords)
         frequency = (sbsFeature + dbsFeature) / 2.0 * 10.0
         # Weighted average of scores from four categories
-        totalScore = (titleFeature*1.5 + frequency*2.0 +
-                      sentenceLength*1.0 + sentencePosition*1.0)/4.0
+        totalScore = (titleFeature * 1.5 + frequency * 2.0 +
+                      sentenceLength * 1.0 + sentencePosition * 1.0) / 4.0
         ranks[(i, s)] = totalScore
+    # print(ranks.keys())
     return ranks
 
 
@@ -116,7 +125,28 @@ def dbs(words, keywords):
 #     except TypeError:
 #         return None
 def split_words(text):
-    return StopWordsVietNam(language="vi").candidate_words(text)
+    import underthesea
+    tags = underthesea.pos_tag(text)
+
+    tokens = []
+    noun_phrase = ""
+    for i in range(0, len(tags)):
+        if tags[i][1] in ["N", "Np", "Nu", "Nc", "M", "NN", "NNP", "NNPS", "NNS"] and tags[i][0].strip() not in ["",
+                                                                                                                 " "]:
+            if noun_phrase != "":
+                noun_phrase += " " + tags[i][0].strip()
+            else:
+                noun_phrase = tags[i][0].strip()
+        else:
+            if noun_phrase not in ["", " "] and len(noun_phrase.strip().split()) >= 2:
+                tokens.append(noun_phrase.strip())
+            noun_phrase = ""
+    if noun_phrase.strip() not in ["", " "] and len(noun_phrase.strip().split()) >= 2:
+        tokens.append(noun_phrase.strip())
+    # if remove_stop_word:
+    tokens = list(map(lambda x: x.lower(), tokens))
+    return tokens
+
 
 def keywords(text):
     """Get the top 10 keywords and their frequency scores ignores blacklisted
@@ -152,14 +182,18 @@ def keywords(text):
         return dict()
 
 
+# def split_sentences(text):
+#     """Split a large string into sentences
+#     """
+#     import nltk.data
+#     tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+#
+#     sentences = tokenizer.tokenize(text)
+#     sentences = [x.replace('\n', '') for x in sentences if len(x) > 10]
+#     return sentences
 def split_sentences(text):
-    """Split a large string into sentences
-    """
-    import nltk.data
-    print("sss")
-    tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
-
-    sentences = tokenizer.tokenize(text)
+    # text = re.sub(r"(,")
+    sentences = StopWordsVietNam().candidate_words(text)
     sentences = [x.replace('\n', '') for x in sentences if len(x) > 10]
     return sentences
 

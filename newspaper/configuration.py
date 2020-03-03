@@ -118,7 +118,7 @@ class Configuration(object):
             return StopWordsJapanese
         elif language == 'th':
             return StopWordsThai
-        elif language == "vn":
+        elif language == "vi":
             return StopWordsVietNam
         return StopWords
 

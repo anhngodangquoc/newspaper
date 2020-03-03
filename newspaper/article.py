@@ -271,7 +271,7 @@ class Article(object):
         self.doc = document_cleaner.clean(self.doc)
 
         self.top_node = self.extractor.calculate_best_node(self.doc)
-        if self.top_node is not None:
+        if self.top_node:
             video_extractor = VideoExtractor(self.config, self.top_node)
             self.set_movies(video_extractor.get_videos())
 
@@ -382,7 +382,6 @@ class Article(object):
         self.set_keywords(keyws)
 
         max_sents = self.config.MAX_SUMMARY_SENT
-        print(self.text)
         summary_sents = nlp.summarize(title=self.title, text=self.text, max_sents=max_sents)
         summary = '\n'.join(summary_sents)
         self.set_summary(summary)

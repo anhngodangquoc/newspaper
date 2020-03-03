@@ -57,7 +57,6 @@ class WordStats(object):
 
 
 class StopWords(object):
-
     TRANS_TABLE = str.maketrans('', '')
     _cached_stop_words = {}
 
@@ -104,6 +103,7 @@ class StopWords(object):
 class StopWordsChinese(StopWords):
     """Chinese segmentation
     """
+
     def __init__(self, language='zh'):
         super(StopWordsChinese, self).__init__(language='zh')
 
@@ -117,6 +117,7 @@ class StopWordsChinese(StopWords):
 class StopWordsArabic(StopWords):
     """Arabic segmentation
     """
+
     def __init__(self, language='ar'):
         # force ar languahe code
         super(StopWordsArabic, self).__init__(language='ar')
@@ -136,6 +137,7 @@ class StopWordsArabic(StopWords):
 class StopWordsKorean(StopWords):
     """Korean segmentation
     """
+
     def __init__(self, language='ko'):
         super(StopWordsKorean, self).__init__(language='ko')
 
@@ -162,6 +164,7 @@ class StopWordsKorean(StopWords):
 class StopWordsHindi(StopWords):
     """Hindi segmentation
     """
+
     def __init__(self, language='hi'):
         super(StopWordsHindi, self).__init__(language='hi')
 
@@ -187,6 +190,7 @@ class StopWordsHindi(StopWords):
 class StopWordsJapanese(StopWords):
     """Japanese segmentation
     """
+
     def __init__(self, language='ja'):
         super(StopWordsJapanese, self).__init__(language='ja')
 
@@ -200,6 +204,7 @@ class StopWordsJapanese(StopWords):
 class StopWordsThai(StopWords):
     """Thai segmentation
     """
+
     def __init__(self, language='th'):
         super(StopWordsThai, self).__init__(language='th')
 
@@ -208,33 +213,19 @@ class StopWordsThai(StopWords):
         tokens = pythainlp.word_tokenize(stripped_input)
         return tokens
 
+
 class StopWordsVietNam(StopWords):
     """VN segmentation
         """
 
-    def __init__(self, language='vn'):
-        super(StopWordsVietNam, self).__init__(language='vn')
+    def __init__(self, language='vi'):
+        super(StopWordsVietNam, self).__init__(language='vi')
 
     def candidate_words(self, stripped_input):
         import underthesea
-        tags = underthesea.pos_tag(stripped_input)
-
-        tokens = []
-        noun_phrase = ""
-        for i in range(0, len(tags)):
-            if tags[i][1] in ["N", "Np", "Nu", "Nc", "M", "NN", "NNP", "NNPS", "NNS"] and tags[i][0].strip() not in ["",
-                                                                                                                     " "]:
-                if noun_phrase != "":
-                    noun_phrase += " " + tags[i][0].strip()
-                else:
-                    noun_phrase = tags[i][0].strip()
-            else:
-                if noun_phrase not in ["", " "] and len(noun_phrase.strip().split()) >= 2:
-                    tokens.append(noun_phrase.strip())
-                noun_phrase = ""
-        if noun_phrase.strip() not in ["", " "] and len(noun_phrase.strip().split()) >= 2:
-            tokens.append(noun_phrase.strip())
-
+        tokens = underthesea.word_tokenize(stripped_input)
+        tokens = list(filter(lambda x: len(x) > 1, tokens))
+        tokens = [i.lower() for i in tokens]
         return tokens
 
     def get_stopword_count(self, content):
@@ -249,7 +240,7 @@ class StopWordsVietNam(StopWords):
             c += 1
             if w in self.STOP_WORDS:
                 overlapping_stopwords.append(w)
-
+        # print(content, len(overlapping_stopwords))
         ws.set_word_count(c)
         ws.set_stopword_count(len(overlapping_stopwords))
         ws.set_stop_words(overlapping_stopwords)
