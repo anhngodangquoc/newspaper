@@ -42,7 +42,7 @@ def summarize(url='', title='', text='', max_sents=5):
         return []
 
     summaries = []
-    print(text)
+    # print(text)
     sentences = split_sentences(text)
     # print(sentences)
     keys = keywords(text)
@@ -53,7 +53,7 @@ def summarize(url='', title='', text='', max_sents=5):
     # print(ranks)
     for rank in ranks:
         summaries.append(rank[0])
-    print(summaries)
+    # print(summaries)
     summaries.sort(key=lambda summary: summary[0])
     return [summary[1] for summary in summaries]
 
