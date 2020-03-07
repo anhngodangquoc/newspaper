@@ -86,7 +86,7 @@ class StopWords(object):
             return WordStats()
         ws = WordStats()
         stripped_input = self.remove_punctuation(content)
-        candidate_words = self.candidate_words(stripped_input.lower())
+        candidate_words = self.candidate_words(stripped_input)
         overlapping_stopwords = []
         c = 0
         for w in candidate_words:

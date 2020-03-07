@@ -1,12 +1,8 @@
 from newspaper import Article
+import pandas as pd
 
-url = 'https://vnexpress.net/thoi-su/10-guong-mat-tre-viet-nam-tieu-bieu-nam-2019-4063675.html'
 
-article = Article(url=url, language='vi')
-article.download()
-article.parse()
-article.nlp()
-# print(article.text)
-# print(article.title)
-print(article.summary)
-print(article.keywords)
+df = pd.read_csv("vnexpress_3_3.csv")
+df.drop(columns=["text"], inplace=True)
+
+df.to_excel("vnexpress.xlsx")

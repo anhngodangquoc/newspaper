@@ -144,7 +144,7 @@ def split_words(text):
     if noun_phrase.strip() not in ["", " "] and len(noun_phrase.strip().split()) >= 2:
         tokens.append(noun_phrase.strip())
     # if remove_stop_word:
-    tokens = list(map(lambda x: x.lower(), tokens))
+    tokens = list(map(lambda x: x, tokens))
     return tokens
 
 

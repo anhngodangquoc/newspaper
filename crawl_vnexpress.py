@@ -33,7 +33,7 @@ def extract_data(news, file_name):
             article.nlp()
 
             temp["keyword"] = ";".join(article.keywords)
-            temp["summary"] = article.summary
+            temp["summary"] = ";".join(article.summary.split("\n"))
             temp["text"] = article.text
             temp["title"] = article.title
             temp["publish_date"] = article.publish_date
