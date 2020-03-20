@@ -1,7 +1,6 @@
 from newspaper import Article
 from newspaper.article import ArticleDownloadState
 from newspaper import Config
-import pandas as pd
 MAX_SUMMARY_SENT=10
 config = Config()
 config.memoize_articles = False
@@ -37,7 +36,7 @@ Covid-19 xuất hiện ở 173 quốc gia và vùng lãnh thổ kể từ khi d�
 ia tăng cường các biện pháp ứng phó.
 
 """
-article.title="Covid-19: Gần 500 người chết vì Covid-19 ở Italy trong một ngày"
+# article.title="Covid-19: Gần 500 người chết vì Covid-19 ở Italy trong một ngày"
 
 article.nlp()
 print(article.keywords)
