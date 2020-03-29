@@ -43,7 +43,6 @@ def summarize(url='', title='', text='', max_sents=5):
 
     summaries = []
     sentences = split_sentences(text)
-    # print(sentences)
     keys = keywords(text)
     titleWords = split_words(title)
 
@@ -79,7 +78,7 @@ def score(sentences, titleWords, keywords):
         totalScore = (titleFeature * 1.5 + frequency * 2.0 +
                       sentenceLength * 1.0 + sentencePosition * 1.0) / 4.0
         ranks[(i, s)] = totalScore
-    # print(ranks.keys())
+
     return ranks
 
 
@@ -94,7 +93,7 @@ def sbs(words, keywords):
 
 
 def dbs(words, keywords):
-    if (len(words) == 0):
+    if len(words) == 0:
         return 0
     summ = 0
     first = []
@@ -193,7 +192,7 @@ def keywords(text):
 def split_sentences(text):
     # text = re.sub(r"(,")
     sentences = StopWordsVietNam().candidate_words(text)
-    sentences = [x.replace('\n', '') for x in sentences if len(x) > 10]
+    sentences = [x.replace('\n', '') for x in sentences if len(x) > 5]
     return sentences
 
 
