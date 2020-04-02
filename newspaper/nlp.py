@@ -130,7 +130,7 @@ def split_words(text):
     noun_phrase = ""
     for i in range(0, len(tags)):
         if tags[i][1] in ["N", "Np", "Nu", "Nc", "M", "NN", "NNP", "NNPS", "NNS"] and tags[i][0].strip() not in ["",
-                                                                                                                 " "]:
+                                                                                                                 " "] and len(tags[i][0]) >= 2:
             if noun_phrase != "":
                 noun_phrase += " " + tags[i][0].strip()
             else:
@@ -146,15 +146,6 @@ def split_words(text):
     # tokens = list(map(lambda x: x, tokens))
     return tokens
 
-def remove_duplicate_token(tokens):
-    result = []
-    temp = []
-    for item in tokens:
-        if temp.lower() not in temp:
-            result.append(temp)
-        else:
-            continue
-    return temp
 
 def keywords(text):
     """Get the top 10 keywords and their frequency scores ignores blacklisted
@@ -180,15 +171,8 @@ def keywords(text):
                           key=lambda x: (x[1], x[0]),
                           reverse=True)
                 
-        result = []
-        temp = []
-        for item in keywords:
-            if item[0].lower() not in temp:
-                result.append(item)
-            else:
-                continue
-        keywords = result[:min_size]
-        keywords = dict((x, y) for x, y in keywords)
+        keywords = keywords[:min_size]
+        keywords = dict((x.lower(), y) for x, y in keywords)
 
         for k in keywords:
             articleScore = keywords[k] * 1.0 / max(num_words, 1)
