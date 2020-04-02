@@ -141,10 +141,20 @@ def split_words(text):
             noun_phrase = ""
     if noun_phrase.strip() not in ["", " "] and len(noun_phrase.strip().split()) >= 2:
         tokens.append(noun_phrase.strip())
+    # print(tokens)
     # if remove_stop_word:
-    tokens = list(map(lambda x: x, tokens))
+    # tokens = list(map(lambda x: x, tokens))
     return tokens
 
+def remove_duplicate_token(tokens):
+    result = []
+    temp = []
+    for item in tokens:
+        if temp.lower() not in temp:
+            result.append(temp)
+        else:
+            continue
+    return temp
 
 def keywords(text):
     """Get the top 10 keywords and their frequency scores ignores blacklisted
@@ -169,7 +179,15 @@ def keywords(text):
         keywords = sorted(freq.items(),
                           key=lambda x: (x[1], x[0]),
                           reverse=True)
-        keywords = keywords[:min_size]
+                
+        result = []
+        temp = []
+        for item in keywords:
+            if item[0].lower() not in temp:
+                result.append(item)
+            else:
+                continue
+        keywords = result[:min_size]
         keywords = dict((x, y) for x, y in keywords)
 
         for k in keywords:

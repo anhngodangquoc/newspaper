@@ -16,10 +16,17 @@ config.language = "vi"
 article = Article("temp", config=config)
 article.download_state = ArticleDownloadState.SUCCESS
 article.is_parsed = True
+
 article.text = """
-Italy ghi nhận 2.987 người chết vì nCoV sau khi tăng 475 ca trong một ngày, gần bằng số ca tử vong ở Trung Quốc là 3.237. Cơ quan Bảo vệ Dân sự Italy cho biết nước này ghi nhận thêm 475 người chết vì nCoV, mức tăng trong ngày cao nhất thế giới và cao nhất từ khi nước này công bố số liệu. Trong số 475 ca, riêng vùng Lombardy ghi nhận 319 trường hợp. Tổng cộng 35.713 người nhiễm nCoV
+Xuân Nghị được biết đến là một chàng diễn viên trẻ sở hữu nét hài duyên dáng và lối diễn khá tự nhiên, thu hút. Sau những thành công từ vai diễn Mr. Cần Trô, Xuân Nghị bắt đầu có những bước tiến vượt bậc trong sự nghiệp. Mới đây, anh đảm nhận vai nam chính trong một bộ phim truyền hình chiếu trên VTV3.
+
+Vốn luôn xuất hiện với hình ảnh hài hước, lạc quan nhưng Xuân Nghị cho biết anh gặp phải không ít áp lực khi đảm nhận vai chính phim truyền hình đầu tay. “Lúc trước mình đã tạo được dấu ấn với vai Mr Cần Trô, do đó, thách thức của Nghị là phải làm sao cho vai Mr Xà Bông (Bách) phải xuất sắc hơn những gì mà mình từng làm được. Vượt qua chính mình là áp lực lớn nhất của Nghị”. 
+Đặt mục tiêu vượt qua “cái bóng” của Mr Cần Trô, chỉ sau 3 tập phát sóng, vai Bách của Xuân Nghị trong bộ phim Nhà Trọ Balanha đã để lại được những dấu ấn đáng kể trong lòng khán giả.
+
+Lần đầu, người hâm mộ được chứng kiến một Xuân Nghị vô cùng ấm áp, tâm lý. Nam diễn viên cho biết, vai Bách có nhiều nét tương đồng về tính cách với anh ngoài đời, nhất là sự hài hước, tuy nhiên, bản thân lại không “mê gái” như Bách. “Bách trong phim mê gái lắm, còn Nghị thì không đâu” (cười).
+
 """
-# article.title="Covid-19: Gần 500 người chết vì Covid-19 ở Italy trong một ngày"
+article.title="Diễn viên Xuân Nghị: 'Áp lực lớn nhất của tôi là vượt qua 'cái bóng' của Mr Cần Trô'"
 
 article.nlp()
 print(article.keywords)
