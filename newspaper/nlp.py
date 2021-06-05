@@ -172,7 +172,7 @@ def keywords(text):
                           reverse=True)
                 
         keywords = keywords[:min_size]
-        keywords = dict((x.lower(), y) for x, y in keywords)
+        keywords = dict((x, y) for x, y in keywords)
 
         for k in keywords:
             articleScore = keywords[k] * 1.0 / max(num_words, 1)
