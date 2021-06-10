@@ -238,7 +238,7 @@ class ContentExtractor(object):
                     return datetime_obj
                 
         # found = doc.xpath('//*[@%s="%s"]' % (attr, val))
-        microdata_content = doc.xpath('//script[@type="application/ld+json"]/text()').extract_first()
+        microdata_content = doc.xpath('//script[@type="application/ld+json"]/text()')[0].get()
         microdata = json.loads(microdata_content)
         datetime_obj = parse_date_str(microdata["datePublished"])
         if datetime_obj:
