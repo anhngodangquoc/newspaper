@@ -15,7 +15,6 @@ import copy
 import logging
 import re
 import re
-import json
 from collections import defaultdict
 
 from dateutil.parser import parse as date_parser
@@ -236,13 +235,6 @@ class ContentExtractor(object):
                 datetime_obj = parse_date_str(date_str)
                 if datetime_obj:
                     return datetime_obj
-                
-        # found = doc.xpath('//*[@%s="%s"]' % (attr, val))
-        microdata_content = doc.xpath('//script[@type="application/ld+json"]/text()')[0].get()
-        microdata = json.loads(microdata_content)
-        datetime_obj = parse_date_str(microdata["datePublished"])
-        if datetime_obj:
-            return datetime_obj;
 
         return None
 
