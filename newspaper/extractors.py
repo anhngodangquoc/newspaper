@@ -15,6 +15,7 @@ import copy
 import logging
 import re
 import re
+import json
 from collections import defaultdict
 
 from dateutil.parser import parse as date_parser
@@ -23,6 +24,8 @@ from urllib.parse import urljoin, urlparse, urlunparse
 
 from . import urls
 from .utils import StringReplacement, StringSplitter
+
+from newspaper.utils import BeautifulSoup
 
 log = logging.getLogger(__name__)
 
@@ -204,6 +207,8 @@ class ContentExtractor(object):
              'content': 'content'},
             {'attribute': 'itemprop', 'value': 'datePublished',
              'content': 'datetime'},
+            {'attribute': 'itemprop', 'value': 'datePublished',
+             'content': 'content'},
             {'attribute': 'property', 'value': 'og:published_time',
              'content': 'content'},
             {'attribute': 'name', 'value': 'article_date_original',
@@ -231,6 +236,13 @@ class ContentExtractor(object):
                 datetime_obj = parse_date_str(date_str)
                 if datetime_obj:
                     return datetime_obj
+                
+        # found = doc.xpath('//*[@%s="%s"]' % (attr, val))
+        microdata_content = doc.xpath('//script[@type="application/ld+json"]/text()').extract_first()
+        microdata = json.loads(microdata_content)
+        datetime_obj = parse_date_str(microdata["datePublished"])
+        if datetime_obj:
+            return datetime_obj;
 
         return None
 
